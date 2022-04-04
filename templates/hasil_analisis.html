@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Sistem Sentimen Analisis - Upload File</title>
+	<title>Sistem Sentimen Analisis - Hasil Analisis</title>
 	<!-- <link rel="stylesheet" href=""> -->
 	
 	<!-- CSS Bootstrap -->
@@ -170,7 +170,8 @@
 						  <!-- end of tabel -->
 					</div>
 					<div class="row justify-content-center">
-						<p class="h6 font-weight-bold">Hasil Akurasi Sistem: <span class="text-">{{skor*100}}</span> %</p>
+						<p class="h6 font-weight-bold">Hasil Akurasi Sistem: <span class="text-">{{'%0.3f'|format(skor*100|float)}}</span> %</p>
+
 					</div>
 				</div>
 			</div>

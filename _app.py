@@ -117,7 +117,7 @@ def modelTraining():
     # End of menghitung
 
     # Klasifikasi
-    clasifier = MultinomialNB(alpha=1)
+    clasifier = MultinomialNB(alpha=0.01)
     tfidf_vectorizer = TfidfVectorizer()
     # Pembobotan TF_IDF
     X_train_tfidf = tfidf_vectorizer.fit_transform(X_train)
@@ -135,7 +135,7 @@ def modelTraining():
     # end of klasifikasi
     data_frame_prediction  = pd.DataFrame({'processed_text':X_test.values,'label':y_test.values, 'prediction':y_pred})
     return render_template('hasil_analisis.html', data = data_frame_prediction, jlh=[jlh_full,sum(jlh_full)],
-                            jlh1=[jlh_train,sum(jlh_train)], jlh2=[jlh_test,sum(jlh_test)], skor = score_accuracy,
+                            jlh1=[jlh_train,sum(jlh_train)], jlh2=[jlh_test,sum(jlh_test)], skor =  score_accuracy,
                             confusion=matrix_confusion)
 
 if __name__ == '__main__':
