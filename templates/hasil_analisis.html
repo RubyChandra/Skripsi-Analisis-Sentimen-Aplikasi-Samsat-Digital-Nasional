@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Sistem Sentimen Analisis - Upload File</title>
+	<!-- <link rel="stylesheet" href=""> -->
+	
+	<!-- CSS Bootstrap -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<style type="text/css">
+		table.fixed { table-layout:fixed; width: 90%;}
+		.table-dataset{
+			table-layout: fixed; width: 60%;
+		}
+		.table-confusion{
+			width: 40%;
+		}
+	</style>
+</head>
+<body>
+	
+	<!-- As a heading -->
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container">
+		  <span class="navbar-brand mb-0 h1">Analisis Sentimen Aplikasi Samsat Nasional Digital</span>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		  	<span class="navbar-toggler-icon"></span>
+		  	</button>
+		  	
+	 	</div>
+	</nav>
+
+	<!-- container -->
+	<div class="container">
+		<div class="row h-100 my-2">
+			<div class="col-10">
+				<h4>Hasil Analisis</h4>			
+			</div>
+			<div class="col-2 text-right">
+				<a class="btn btn-primary" href="#">Simpan Analisis</a>
+			</div>
+			<!-- Baris menapilkan jumlah dataset -->
+			<div class="row w-100 my-3">
+				<div class="container">
+					<div class="row justify-content-center">
+						<p class="h5 my-3 font-weight-bold">Dataset Ulasan</p>
+					</div>
+					<div class="row justify-content-center">
+						<!-- Tabel dataset -->
+						<table class="table table-dataset border">
+						  <thead>
+						    <tr>
+						      <th scope="col" width="10%">No</th>
+						      <th scope="col" width="18%">Keterangan</th>
+						      <th scope="col" width="18%">Positif</th>
+						      <th scope="col" width="18%">Negatif</th>
+						      <th scope="col" width="18%">Netral</th>
+						      <th scope="col" width="18%">Total</th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						    <tr>
+						      <th scope="row">1</th>
+						      <td>Dataset Keseluruhan</td>
+						      <td>{{jlh[0][0]}}</td>
+						      <td>{{jlh[0][1]}}</td>
+						      <td>{{jlh[0][2]}}</td>
+							  <td>{{jlh[1]}}</td>
+						    </tr>
+						    <tr>
+						      <th scope="row">2</th>
+						      <td>Dataset Training (80%)</td>
+						      <td>{{jlh1[0][0]}}</td>
+						      <td>{{jlh1[0][1]}}</td>
+						      <td>{{jlh1[0][2]}}</td>
+							  <td>{{jlh1[1]}}</td>
+						    </tr>
+						    <tr>
+						      <th scope="row">3</th>
+						      <td>Dataset Testing (20%)</td>
+						      <td>{{jlh2[0][0]}}</td>
+						      <td>{{jlh2[0][1]}}</td>
+						      <td>{{jlh2[0][2]}}</td>
+							  <td>{{jlh2[1]}}</td>
+
+						    </tr>
+						  </tbody>
+						</table>
+						<!-- end of tabel -->
+					</div>
+				</div>
+			</div>
+			<!-- end of menampilkan jumlah dataset -->
+			
+			<div class="row my-3 w-100 border">
+			<!-- Untuk nampilin word clouds -->
+				<div class="container">
+					<div class="row justify-content-center">
+						<p class="h5 mt-3 font-weight-bold">Visualisasi Infomasi Pada Setiap Kelas Sentimen</p>
+					</div>
+					<hr>
+					<div class="row">
+						<div class="row w-100 text-center">
+							<div class="col-4">
+								<p class="h6">Sentimen Positif</p>
+							</div>
+							<div class="col-4">
+								<p class="h6">Sentimen Negatif</p>
+							</div>
+							<div class="col-4">
+								<p class="h6">Sentimen Netral</p>
+							</div>
+						</div>
+						<div class="row text-center">
+							<div class="col-4">
+								<img src="{{url_for('static',filename='image/wordcloud/cloud_positif.png')}}" alt="" width="100%">
+							</div>
+							<div class="col-4">
+								<img src="{{url_for('static',filename='image/wordcloud/cloud_negatif.png')}}" alt="" width="100%">
+							</div>
+							<div class="col-4">
+								<img src="{{url_for('static',filename='image/wordcloud/cloud_netral.png')}}" alt="" width="100%">
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			<!-- end of Untuk nampilin wordcloud -->
+
+			<!-- Untuk nampilin confusion matrix -->
+			<div class="row my-3 w-100">
+				<div class="container">
+					<div class="row justify-content-center">
+						<p class="h5 my-3 font-weight-bold">Pengujian Akurasi Sistem Terhadap Data Testing</p>
+					</div>
+					<div class="row justify-content-center">
+						<!-- Tabel confusion matrix -->
+						<table class="table table-confusion border text-center">
+							<thead>
+							  <tr>
+								<th scope="col"class="bg-dark"></th>
+								<th scope="col" >Positif</th>
+								<th scope="col" >Netral</th>
+								<th scope="col" >Negatif</th>
+							  </tr>
+							</thead>
+							<tbody>
+							  <tr>
+								<th>Positif</th>
+								<td>{{confusion[2][2]}}</td>
+								<td>{{confusion[2][1]}}</td>
+								<td>{{confusion[2][0]}}</td>
+							  </tr>
+							  <tr>
+								<th>Negatif</th>
+								<td>{{confusion[0][2]}}</td>
+								<td>{{confusion[0][1]}}</td>
+								<td>{{confusion[0][0]}}</td>
+							  </tr>
+							  <tr>
+								<th>Netral</th>
+								<td>{{confusion[1][2]}}</td>
+								<td>{{confusion[1][1]}}</td>
+								<td>{{confusion[1][0]}}</td>
+							  </tr>
+							</tbody>
+						  </table>
+						  <!-- end of tabel -->
+					</div>
+					<div class="row justify-content-center">
+						<p class="h6 font-weight-bold">Hasil Akurasi Sistem: <span class="text-">{{skor*100}}</span> %</p>
+					</div>
+				</div>
+			</div>
+			<!-- End of connfusion matrix -->
+			<div class="row my-3 w-100 ">
+				<!-- Untuk nampilin hasil prediksi sistem -->
+				<div class="container">
+					<hr>
+					<div class="row justify-content-center">
+						<p class="h5 mb-3 font-weight-bold">Hasil Klasifikasi Data Testing</p>
+					</div>
+					<div class="row justify-content-center">
+						<table class="table fixed border">
+							<thead>
+								<tr>
+									<th scope="col" width=10%>No</th>
+									<th scope="col" width=56%>Processed Ulasan</th>
+									<th scope="col" width=17% class="text-center">Label Asli</th>
+									<th scope="col" width=17% class="text-center">Prediksi</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for row in data.index %}
+								<tr>
+									<td>{{loop.index}}</td>
+									<td>{{data['processed_text'][row]}}</td>
+									<td class="text-center">{{data['label'][row]}}</td>
+									<td class="text-center">{{data['prediction'][row]}}</td>
+								</tr>
+									{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			
+			</div>
+		</div>
+	</div>
+	<!-- endofcontainer -->
+	
+	<!-- script for Bootstrap-->
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
