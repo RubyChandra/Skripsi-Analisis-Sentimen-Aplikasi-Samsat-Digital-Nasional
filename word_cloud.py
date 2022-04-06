@@ -13,7 +13,6 @@ def cloudMaker(x, names):
 	plt.axis("off")
 	plt.tight_layout(pad=0)
 	plt.savefig('static/image/wordcloud/'+names+'.png')
-	# plt.show()
 
 def countFrequency(df, names):
 	tf = tf_vector.fit_transform(df['processed_text'])
