@@ -1,4 +1,4 @@
-from flask import Flask,render_template,redirect,url_for,make_response,request,flash
+from flask import Flask,render_template,redirect,url_for,make_response,request,flash,send_from_directory
 from review_scraper import scraper_reviews
 from parse_csv import parseCSV
 from count_sentimen import countEachSentiment,separateSentiment
@@ -17,8 +17,8 @@ from word_cloud import countFrequency
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = 'static/folder_csv'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = 'static/folder_csv'
+app.config['DICTIONARY_FOLDER'] = "static/folder_kamus"
 
 global temp_dataframe
 
@@ -37,6 +37,41 @@ def scrapReview():
         resp.headers["Content-Type"]  = "text/csv"
         return resp
     return render_template('scrap.html')
+
+@app.route('/manage_dictionary')
+def manageDictionary():
+   return render_template('manage_dictionary.html', msg=False, success=False)
+
+@app.route('/manage_dictionary/download_dict/<dict_name>')
+def downloadDict(dict_name):
+   try:
+      return send_from_directory(directory=app.config["DICTIONARY_FOLDER"], path=dict_name, as_attachment=True)
+   except FileNotFoundError:
+      abort(404)
+
+@app.route('/manage_dictionary/update_stopwords',methods=['POST','GET'])
+def updateStopDict():
+   if request.method == 'POST':
+      files_txt = request.files['file-upload']
+      file_name,extension = files_txt.filename.split('.')
+      if file_name == 'kamus_stopwords' and extension == 'txt':
+         file_path = os.path.join(app.config['DICTIONARY_FOLDER'],files_txt.filename)
+         files_txt.save(file_path)
+         return render_template('manage_dictionary.html', msg=False, text= "File kamus_stopwords", success=True)
+      else:
+         return render_template('manage_dictionary.html', msg=True, text= "File kamus_stopwords", success=False)
+
+@app.route('/manage_dictionary/update_normalize',methods=['POST','GET'])
+def updateNormalizeDict():
+   if request.method == 'POST':
+      files_xlsx = request.files['file-upload']
+      file_name,extension = files_xlsx.filename.split('.')
+      if file_name == 'kamus_normalisasi' and extension == 'xlsx':
+         file_path = os.path.join(app.config['DICTIONARY_FOLDER'],files_xlsx.filename)
+         files_xlsx.save(file_path)
+         return render_template('manage_dictionary.html', msg=False, text= "File kamus_normalisasi", success=True)
+      else:
+         return render_template('manage_dictionary.html', msg=True, text= "File kamus_normalisasi", success=False)
 
 @app.route('/upload_review', methods=['POST','GET'])
 def uploadReview():
