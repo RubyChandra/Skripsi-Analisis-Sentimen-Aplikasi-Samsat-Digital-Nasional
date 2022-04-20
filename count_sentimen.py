@@ -9,7 +9,3 @@ def countEachSentiment(df):
     df_net = df.loc[df['label']==0]
     jlh= len(df_pos.index),len(df_neg.index),len(df_net.index)
     return jlh
-
-def separateSentiment(df,x):
-    df = df.loc[df['label']==x]
-    return df

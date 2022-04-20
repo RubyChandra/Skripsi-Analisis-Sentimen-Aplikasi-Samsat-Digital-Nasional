@@ -3,61 +3,89 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Sistem Sentimen Analisis - Hasil Analisis</title>
 	<!-- <link rel="stylesheet" href=""> -->
-	
+
 	<!-- CSS Bootstrap -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<style type="text/css">
-		table.fixed { table-layout:fixed; width: 90%;}
+	@media (min-width: 350px) and (max-width: 767px){
+		.table-dataset{
+			table-layout: fixed; width: 100%;
+			margin-left: 30px;
+		}
+		.table-predict { 
+			margin-left: 25px;
+		}
+		.mereng{
+			margin-left: 0px;
+		}
+	}
+	@media (min-width: 768px) and (max-width: 1000px){
+		.table-dataset{
+			table-layout: fixed; width: 80%;
+			margin-left: 30px;
+		}
+		.table-predict { 
+			margin-left: 30px;
+		}
+
+	}
+	@media (min-width: 1000px){
 		.table-dataset{
 			table-layout: fixed; width: 60%;
 		}
-		.table-confusion{
+		.table-predict { 
+			margin-left: 40px;
+		}
+	}
+	.table-predict { table-layout:fixed; width: 90%;}
+
+	.table-confusion{
 			width: 40%;
+		}
+	.wordcloud{
+			margin-left: 0px;
 		}
 	</style>
 </head>
 <body>
-	
+
 	<!-- As a heading -->
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<div class="container">
-		  <span class="navbar-brand mb-0 h1">Analisis Sentimen Aplikasi Samsat Nasional Digital</span>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-		  	<span class="navbar-toggler-icon"></span>
-		  	</button>
-		  	
+		  <span class="navbar-brand mb-0 h1">Analisis Sentimen SIGNAL</span>
 	 	</div>
 	</nav>
 
 	<!-- container -->
 	<div class="container">
-		<div class="row h-100 my-2">
-			<div class="col-10">
-				<h4>Hasil Analisis Sentimen Aplikasi Signal</h4>			
+		<div class="row h-100 mt-2">
+			<div class="col-12 col-md-10 ">
+				<h5>Hasil Analisis Sentimen Aplikasi Signal</h5>
 			</div>
-		
-			<div class="col-2 text-right">
+
+			<div class="col-2">
 				<a href="{{url_for('index')}}" class="btn btn-primary">Menu Utama</a>
 			</div>
 			<!-- Baris menapilkan jumlah dataset -->
-			<div class="row w-100 my-3">
+			<div class="row w-100 my-3 mereng">
 				<div class="container">
-					<div class="row justify-content-center">
-						<p class="h5 my-3 font-weight-bold">Dataset Ulasan</p>
+					<div class="row ">
+						<p class="h6 my-3 font-weight-bold text-center mx-auto">Dataset Ulasan</p>
 					</div>
-					<div class="row justify-content-center">
+					<div class="row">
 						<!-- Tabel dataset -->
-						<table class="table table-dataset border">
+						<table class="table table-dataset border mx-auto">
 						  <thead>
 						    <tr>
 						      <th scope="col" width="10%">No</th>
-						      <th scope="col" width="18%">Keterangan</th>
-						      <th scope="col" width="18%">Positif</th>
-						      <th scope="col" width="18%">Negatif</th>
-						      <th scope="col" width="18%">Netral</th>
-						      <th scope="col" width="18%">Total</th>
+						      <th scope="col" width="25%">Keterangan</th>
+						      <th scope="col" width="17%">Positif</th>
+						      <th scope="col" width="17%">Negatif</th>
+						      <th scope="col" width="17%">Netral</th>
+						      <th scope="col" width="15%">Total</th>
 						    </tr>
 						  </thead>
 						  <tbody>
@@ -93,52 +121,54 @@
 				</div>
 			</div>
 			<!-- end of menampilkan jumlah dataset -->
-			
-			<div class="row my-3 w-100 border">
+
+			<div class="row my-3 w-100 border wordcloud mereng">
 			<!-- Untuk nampilin word clouds -->
 				<div class="container">
-					<div class="row justify-content-center">
-						<p class="h5 mt-3 font-weight-bold">Visualisasi Infomasi Pada Setiap Kelas Sentimen</p>
+					<div class="row">
+						<p class="h6 mt-3 font-weight-bold text-center mx-auto">Visualisasi Infomasi Pada Setiap Kelas Sentimen</p>
 					</div>
 					<hr>
-					<div class="row">
-						<div class="row w-100 text-center">
-							<div class="col-4">
-								<p class="h6">Sentimen Positif</p>
-							</div>
-							<div class="col-4">
-								<p class="h6">Sentimen Negatif</p>
-							</div>
-							<div class="col-4">
-								<p class="h6">Sentimen Netral</p>
-							</div>
-						</div>
-						<div class="row text-center">
-							<div class="col-4">
-								<img src="{{url_for('static',filename='image/wordcloud/cloud_positif.png')}}" alt="" width="100%">
-							</div>
-							<div class="col-4">
-								<img src="{{url_for('static',filename='image/wordcloud/cloud_negatif.png')}}" alt="" width="100%">
-							</div>
-							<div class="col-4">
-								<img src="{{url_for('static',filename='image/wordcloud/cloud_netral.png')}}" alt="" width="100%">
-							</div>
-						</div>
-						
+					<div class="row text-center">
+					  <div class="col-sm-4">
+					    <div class="card border-0">
+					    <img src="{{url_for('static',filename='image/wordcloud/cloud_positif.png')}}" alt="" width="100%">
+					      <div class="card-body">
+					        <h6 class="card-title border-top">Sentimen Positif</h6>
+					      </div>
+					    </div>
+					  </div>
+					  <div class="col-sm-4">
+					    <div class="card border-0">
+					    <img src="{{url_for('static',filename='image/wordcloud/cloud_negatif.png')}}" alt="" width="100%">
+					      <div class="card-body">
+					        <h6 class="card-title border-top">Sentimen Negatif</h6>
+					      </div>
+					    </div>
+					  </div>
+					  <div class="col-sm-4">
+					    <div class="card border-0">
+					    <img src="{{url_for('static',filename='image/wordcloud/cloud_netral.png')}}" alt="" width="100%">
+					      <div class="card-body">
+					        <h6 class="card-title border-top">Sentimen Netral</h6>
+					      </div>
+					    </div>
+					  </div>
 					</div>
 				</div>
 			</div>
 			<!-- end of Untuk nampilin wordcloud -->
 
 			<!-- Untuk nampilin confusion matrix -->
-			<div class="row my-3 w-100">
+			<div class="row my-3 w-100 mereng border-bottom">
 				<div class="container">
-					<div class="row justify-content-center">
-						<p class="h5 my-3 font-weight-bold">Pengujian Akurasi Sistem Terhadap Data Testing</p>
+					<div class="row">
+						<p class="h6 my-3 font-weight-bold mx-auto">Pengujian Performa Sistem Terhadap Data Testing</p>
 					</div>
-					<div class="row justify-content-center">
-						<!-- Tabel confusion matrix -->
-						<table class="table table-confusion border text-center">
+					<div class="row">
+						<div class="col-lg-6 col-md-12 col-sm-12  w-100">
+							<!-- Tabel confusion matrix -->
+						<table class="table table-confusion border text-center mx-auto">
 							<thead>
 							  <tr>
 								<th scope="col"class="bg-dark"></th>
@@ -155,43 +185,73 @@
 								<td>{{confusion[2][0]}}</td>
 							  </tr>
 							  <tr>
-								<th>Negatif</th>
-								<td>{{confusion[0][2]}}</td>
-								<td>{{confusion[0][1]}}</td>
-								<td>{{confusion[0][0]}}</td>
-							  </tr>
-							  <tr>
 								<th>Netral</th>
 								<td>{{confusion[1][2]}}</td>
 								<td>{{confusion[1][1]}}</td>
 								<td>{{confusion[1][0]}}</td>
 							  </tr>
+							  <tr>
+								<th>Negatif</th>
+								<td>{{confusion[0][2]}}</td>
+								<td>{{confusion[0][1]}}</td>
+								<td>{{confusion[0][0]}}</td>
+							  </tr>
 							</tbody>
 						  </table>
 						  <!-- end of tabel -->
+						</div>
+						<div class="col-lg-6 col-md-12 col-sm-12 w-100 ">
+							<table class="table table-confusion mx-auto border">
+							<thead>
+								<tr class="text-center">
+									<th scope="col" class="bg-dark"></th>
+									<th scope="col">Accuracy</th>
+									<th scope="col">Precision</th>
+									<th scope="col">Recall</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="text-center">
+									<th scope="row">Positif</th>
+									<td rowspan="3" class="align-middle">{{'%0.3f'|format(skor*100|float)}}%</th>
+									<td>{{'%0.3f'|format(skor_2[2]*100|float)}}%</td>
+									<td>{{'%0.3f'|format(skor_3[2]*100|float)}}%</td>
+								</tr>
+								<tr class="text-center">
+									<th scope="row">Negatif</th>
+									<td>{{'%0.3f'|format(skor_2[0]*100|float)}}%</td>
+									<td>{{'%0.3f'|format(skor_3[0]*100|float)}}%</td>
+								</tr>
+								<tr class="text-center">
+									<th scope="row">Netral</th>
+									<td>{{'%0.3f'|format(skor_2[1]*100|float)}}%</td>
+									<td>{{'%0.3f'|format(skor_3[1]*100|float)}}%</td>
+								</tr>
+								
+							</tbody>
+						</table>
+						</div>
+						
 					</div>
-					<div class="row justify-content-center">
-						<p class="h6 font-weight-bold">Hasil Akurasi Sistem: <span class="text-">{{'%0.3f'|format(skor*100|float)}}</span> %</p>
-
-					</div>
+					
 				</div>
 			</div>
+
 			<!-- End of connfusion matrix -->
-			<div class="row my-3 w-100 ">
+			<div class="row my-3 w-100 mereng">
 				<!-- Untuk nampilin hasil prediksi sistem -->
 				<div class="container">
-					<hr>
-					<div class="row justify-content-center">
-						<p class="h5 mb-3 font-weight-bold">Hasil Klasifikasi Data Testing</p>
+					<div class="row ">
+						<p class="h6 mb-3 font-weight-bold mx-auto">Hasil Klasifikasi Data Testing</p>
 					</div>
-					<div class="row justify-content-center">
-						<table class="table fixed border">
+					<div class="row ">
+						<table class="table fixed border table-predict mx-auto">
 							<thead>
 								<tr>
 									<th scope="col" width=10%>No</th>
-									<th scope="col" width=56%>Processed Ulasan Data Testing</th>
-									<th scope="col" width=17% class="text-center">Label Asli</th>
-									<th scope="col" width=17% class="text-center">Prediksi</th>
+									<th scope="col" width=50%>Data Latih</th>
+									<th scope="col" width=20% class="text-center">Asli</th>
+									<th scope="col" width=20% class="text-center">Prediksi</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -207,12 +267,12 @@
 						</table>
 					</div>
 				</div>
-			
+
 			</div>
 		</div>
 	</div>
 	<!-- endofcontainer -->
-	
+
 	<!-- script for Bootstrap-->
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

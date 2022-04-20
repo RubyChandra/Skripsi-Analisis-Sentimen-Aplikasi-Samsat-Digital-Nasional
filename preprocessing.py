@@ -7,12 +7,12 @@ import re
 factory = StemmerFactory()
 stemmer = factory.create_stemmer()
 
-def preprocess(kalimat):
+def caseandclean(kalimat):
 	#remove number
 	kalimat = re.sub(r'\d+', '', kalimat)
 	#lowercase
 	kalimat = kalimat.lower()
-	#memsiahan huruf yang neempel koma
+	#memisahkan huruf yang nempel koma
 	kalimat = kalimat.replace(',', ' ')
 	#remove punc
 	kalimat = re.sub(r'[^\w\s]',' ', kalimat)

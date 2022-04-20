@@ -1,7 +1,7 @@
 from flask import Flask,render_template,redirect,url_for,make_response,request,flash,send_from_directory
 from review_scraper import scraper_reviews
 from parse_csv import parseCSV
-from count_sentimen import countEachSentiment,separateSentiment
+from count_sentimen import countEachSentiment
 import preprocessing as prepro
 import pandas as pd
 import numpy as np
@@ -44,11 +44,8 @@ def manageDictionary():
 
 @app.route('/manage_dictionary/download_dict/<dict_name>')
 def downloadDict(dict_name):
-   try:
-      return send_from_directory(directory=app.config["DICTIONARY_FOLDER"], path=dict_name, as_attachment=True)
-   except FileNotFoundError:
-      abort(404)
-
+    return send_from_directory(directory=app.config["DICTIONARY_FOLDER"], path=dict_name, as_attachment=True)
+       
 @app.route('/manage_dictionary/update_stopwords',methods=['POST','GET'])
 def updateStopDict():
    if request.method == 'POST':
@@ -87,6 +84,9 @@ def uploadReview():
             file_csv.save(file_path)
             # read files with pandas
             data_frame_labeled = parseCSV(file_path)
+            if data_frame_labeled.columns[0] != "nama_pengguna" or data_frame_labeled['label'].isnull().any() == True:
+                os.remove(os.path.join(app.config['UPLOAD_FOLDER'],file_csv.filename))
+                return render_template('upload_review.html', msg = True)
             del data_frame_labeled['skor']
             del data_frame_labeled['tanggal']
 
@@ -95,32 +95,26 @@ def uploadReview():
             data_frame_labeled.insert(loc=4, column='Perbaikan Kata', value='')
             data_frame_labeled.insert(loc=5, column='Filtering', value='')
             data_frame_labeled.insert(loc=6, column='Stemming', value='')
+            
             # Preprocessing
-            for i in data_frame_labeled.index:
-                data_frame_labeled.at[i,'Case Folding dan Cleansing'] = prepro.preprocess(
-                    data_frame_labeled.at[i,'ulasan'])
-            data_frame_labeled['Case Folding dan Cleansing'].replace('',np.nan,inplace=True)
-            data_frame_labeled.dropna(subset=['Case Folding dan Cleansing'], inplace=True)
-            data_frame_labeled.reset_index()
-
             for i in data_frame_labeled.index:    
+                data_frame_labeled.at[i,'Case Folding dan Cleansing'] = prepro.caseandclean(
+                    data_frame_labeled.at[i,'ulasan'])
                 data_frame_labeled.at[i,'Tokenizing'] = data_frame_labeled.at[i,'Case Folding dan Cleansing'].split()
-                data_frame_labeled.at[i,'Perbaikan Kata'] = prepro.normalisasikata(data_frame_labeled.at[i,'Case Folding dan Cleansing']).split()
-                data_frame_labeled.at[i,'Filtering'] = prepro.removestopword(' '.join(data_frame_labeled.at[i,'Perbaikan Kata'])).split()
-                data_frame_labeled.at[i,'Stemming'] = (' '.join(data_frame_labeled.at[i,'Filtering']))
-                data_frame_labeled.at[i,'Stemming'] = prepro.stemmer.stem(data_frame_labeled.at[i,'Stemming'])
-                data_frame_labeled.at[i,'Stemming'] = prepro.removestopword(data_frame_labeled.at[i,'Stemming']).split()
+                data_frame_labeled.at[i,'Perbaikan Kata'] = prepro.normalisasikata(data_frame_labeled.at[i,'Case Folding dan Cleansing'])
+                data_frame_labeled.at[i,'Filtering'] = prepro.removestopword((data_frame_labeled.at[i,'Perbaikan Kata']))
+                data_frame_labeled.at[i,'Stemming'] = prepro.stemmer.stem(data_frame_labeled.at[i,'Filtering'])
+                data_frame_labeled.at[i,'Stemming'] = prepro.normalisasikata(data_frame_labeled.at[i,'Stemming'])
+                data_frame_labeled.at[i,'Stemming'] = prepro.removestopword(data_frame_labeled.at[i,'Stemming'])
+
+            data_frame_labeled['Stemming'].replace('', np.nan, inplace=True)
+            data_frame_labeled.dropna(subset = ['Stemming'], inplace=True)
         
             data_frame_temp = data_frame_labeled.copy()
-            del data_frame_temp['Tokenizing']
-            del data_frame_temp['Case Folding dan Cleansing']
-            del data_frame_temp['ulasan']
-            del data_frame_temp['nama_pengguna']
-            del data_frame_temp['Perbaikan Kata']
-            del data_frame_temp['Filtering']
+            data_frame_temp.drop(['Case Folding dan Cleansing','ulasan','Tokenizing', 'nama_pengguna','Perbaikan Kata','Filtering'], axis=1)
             data_frame_temp.insert(loc=0, column='processed_text', value='')
             for i in data_frame_temp.index:
-                data_frame_temp.at[i,'processed_text'] = ' '.join(data_frame_temp.at[i,'Stemming'])
+                data_frame_temp.at[i,'processed_text'] = (data_frame_temp.at[i,'Stemming'])
             del data_frame_temp['Stemming']
             
             data_frame_temp.to_csv('static/folder_csv/processed.csv',sep=';',index=None)
@@ -136,11 +130,11 @@ def modelTraining():
     data_frame_processed.dropna(inplace=True)
     jlh_full = countEachSentiment(data_frame_processed) 
 
-    df_pos = separateSentiment(data_frame_processed,1)
-    df_neg = separateSentiment(data_frame_processed,-1)
-    df_net = separateSentiment(data_frame_processed,0)
-
     # Lets say this for wordcloud
+    df_pos = data_frame_processed.loc[data_frame_processed['label']==1]
+    df_neg = data_frame_processed.loc[data_frame_processed['label']==-1]
+    df_net = data_frame_processed.loc[data_frame_processed['label']==0]
+
     countFrequency(df_pos,'cloud_positif')
     countFrequency(df_neg,'cloud_negatif')
     countFrequency(df_net,'cloud_netral')
@@ -150,7 +144,7 @@ def modelTraining():
     label_y = data_frame_processed['label']
     
     # Proses splitting dataset
-    X_latih, X_uji, y_latih, y_uji = train_test_split(dataset_X,label_y, test_size=0.2, random_state=42)
+    X_latih, X_uji, y_latih, y_uji = train_test_split(dataset_X,label_y, test_size=0.2, random_state=41, shuffle=True, stratify=label_y)
     # Menghitung masing-masing jumlah data (training dan testing)
     df_latih = pd.DataFrame({'processed_text':X_latih.values,'label':y_latih.values})
     jlh_latih = countEachSentiment(df_latih)
@@ -158,14 +152,15 @@ def modelTraining():
     jlh_uji = countEachSentiment(df_uji)
     # End of menghitung
 
-    # Klasifikasi
-    clasifier = MultinomialNB(alpha=0.01)
-    tfidf_vectorizer = TfidfVectorizer()
+    tfidf_vectorizer = TfidfVectorizer(smooth_idf=True)
     # Pembobotan TF_IDF
     X_latih_tfidf = tfidf_vectorizer.fit_transform(X_latih)
     X_uji_tfidf = tfidf_vectorizer.transform(X_uji)
-    
     # end of pembobotan
+
+
+    # Model Training  
+    clasifier = MultinomialNB(alpha=0.01)
     clasifier.fit(X_latih_tfidf, y_latih)
     # prediksi
     y_pred = clasifier.predict(X_uji_tfidf)
@@ -173,6 +168,10 @@ def modelTraining():
 
     # accuracy
     score_accuracy = metrics.accuracy_score(y_uji, y_pred)
+    # precision
+    score_precision= metrics.precision_score(y_uji, y_pred, average=None, pos_label=1)
+    # recall
+    score_recall= metrics.recall_score(y_uji, y_pred, average=None, pos_label=1)
     # confusion matrix 
     matrix_confusion = metrics.confusion_matrix(y_uji, y_pred)
     # end of klasifikasi
@@ -181,8 +180,8 @@ def modelTraining():
     data_frame_prediction  = pd.DataFrame({'processed_text':X_uji.values,'label':y_uji.values, 'prediction':y_pred})
     return render_template('hasil_analisis.html', data = data_frame_prediction, jlh=[jlh_full,sum(jlh_full)],
                             jlh1=[jlh_latih,sum(jlh_latih)], jlh2=[jlh_uji,sum(jlh_uji)], skor =  score_accuracy,
-                            confusion=matrix_confusion)
-
+                            confusion=matrix_confusion, skor_2= score_precision, skor_3 = score_recall)
+    
 if __name__ == '__main__':
     # Jangan lupa di hapus kalau sudah selesai
     app.run(debug=True)
