@@ -144,7 +144,7 @@ def modelTraining():
     label_y = data_frame_processed['label']
     
     # Proses splitting dataset
-    X_latih, X_uji, y_latih, y_uji = train_test_split(dataset_X,label_y, test_size=0.2, random_state=41, shuffle=True, stratify=label_y)
+    X_latih, X_uji, y_latih, y_uji = train_test_split(dataset_X,label_y, test_size=0.2, random_state=42, shuffle=True, stratify=label_y)
     # Menghitung masing-masing jumlah data (training dan testing)
     df_latih = pd.DataFrame({'processed_text':X_latih.values,'label':y_latih.values})
     jlh_latih = countEachSentiment(df_latih)
