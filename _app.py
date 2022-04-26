@@ -107,6 +107,7 @@ def uploadReview():
                 data_frame_labeled.at[i,'Stemming'] = prepro.normalisasikata(data_frame_labeled.at[i,'Stemming'])
                 data_frame_labeled.at[i,'Stemming'] = prepro.removestopword(data_frame_labeled.at[i,'Stemming'])
 
+            # incase there was a empty row after processing
             data_frame_labeled['Stemming'].replace('', np.nan, inplace=True)
             data_frame_labeled.dropna(subset = ['Stemming'], inplace=True)
         
@@ -166,19 +167,21 @@ def modelTraining():
     y_pred = clasifier.predict(X_uji_tfidf)
     # end of prediksi
 
+    # confusion matrix 
+    matrix_confusion = metrics.confusion_matrix(y_uji, y_pred)
     # accuracy
     score_accuracy = metrics.accuracy_score(y_uji, y_pred)
     # precision
     score_precision= metrics.precision_score(y_uji, y_pred, average=None, pos_label=1)
     # recall
     score_recall= metrics.recall_score(y_uji, y_pred, average=None, pos_label=1)
-    # confusion matrix 
-    matrix_confusion = metrics.confusion_matrix(y_uji, y_pred)
+    
     # end of klasifikasi
 
     # menyiapkan dataframe baru untuk menampilkan hasil prediksi dari data uji
-    data_frame_prediction  = pd.DataFrame({'processed_text':X_uji.values,'label':y_uji.values, 'prediction':y_pred})
-    return render_template('hasil_analisis.html', data = data_frame_prediction, jlh=[jlh_full,sum(jlh_full)],
+    data_frame_comparison = pd.DataFrame({'processed_text':X_uji.values,'label':y_uji.values, 'prediction':y_pred})
+
+    return render_template('hasil_analisis.html', data = data_frame_comparison, jlh=[jlh_full,sum(jlh_full)],
                             jlh1=[jlh_latih,sum(jlh_latih)], jlh2=[jlh_uji,sum(jlh_uji)], skor =  score_accuracy,
                             confusion=matrix_confusion, skor_2= score_precision, skor_3 = score_recall)
     
