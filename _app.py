@@ -112,8 +112,17 @@ def uploadReview():
             data_frame_labeled.dropna(subset = ['Stemming'], inplace=True)
         
             data_frame_temp = data_frame_labeled.copy()
-            data_frame_temp.drop(['Case Folding dan Cleansing','ulasan','Tokenizing', 'nama_pengguna','Perbaikan Kata','Filtering'], axis=1)
+            
+            data_frame_temp.drop('nama_pengguna',inplace=True,axis=1)
+            data_frame_temp.drop('ulasan',inplace=True,axis=1)
+            data_frame_temp.drop('Case Folding dan Cleansing',inplace=True,axis=1)
+            data_frame_temp.drop('Tokenizing',inplace=True,axis=1)
+            data_frame_temp.drop('Perbaikan Kata',inplace=True,axis=1)
+            data_frame_temp.drop('Filtering',inplace=True,axis=1)
+
+            
             data_frame_temp.insert(loc=0, column='processed_text', value='')
+
             for i in data_frame_temp.index:
                 data_frame_temp.at[i,'processed_text'] = (data_frame_temp.at[i,'Stemming'])
             del data_frame_temp['Stemming']
@@ -145,7 +154,8 @@ def modelTraining():
     label_y = data_frame_processed['label']
     
     # Proses splitting dataset
-    X_latih, X_uji, y_latih, y_uji = train_test_split(dataset_X,label_y, test_size=0.2, random_state=42, shuffle=True, stratify=label_y)
+    X_latih, X_uji, y_latih, y_uji = train_test_split(dataset_X,label_y, test_size=0.2, 
+                                    random_state=42, shuffle=True, stratify=label_y)
     # Menghitung masing-masing jumlah data (training dan testing)
     df_latih = pd.DataFrame({'processed_text':X_latih.values,'label':y_latih.values})
     jlh_latih = countEachSentiment(df_latih)
