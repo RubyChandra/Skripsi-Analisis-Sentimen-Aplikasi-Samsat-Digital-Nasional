@@ -131,6 +131,7 @@
 						<p class="h6 mt-3 font-weight-bold text-center mx-auto">Visualisasi Infomasi Pada Setiap Kelas Sentimen</p>
 					</div>
 					<hr>
+					<!-- wordcloud -->
 					<div class="row text-center">
 					  <div class="col-sm-4">
 					    <div class="card border-0">
@@ -157,6 +158,35 @@
 					    </div>
 					  </div>
 					</div>
+					<!-- endof wordcloud -->
+					<!-- barplot -->
+					<div class="row text-center">
+					  <div class="col-sm-4">
+					    <div class="card border-0">
+					    <img src="{{url_for('static',filename='image/frequency_bar_plot/plot_positif.png')}}" alt="" width="100%">
+					      <div class="card-body">
+					        <h6 class="card-title border-top">Plot Term Positif</h6>
+					      </div>
+					    </div>
+					  </div>
+					  <div class="col-sm-4">
+					    <div class="card border-0">
+					    <img src="{{url_for('static',filename='image/frequency_bar_plot/plot_negatif.png')}}" alt="" width="100%">
+					      <div class="card-body">
+					        <h6 class="card-title border-top">Plot Term Negatif</h6>
+					      </div>
+					    </div>
+					  </div>
+					  <div class="col-sm-4">
+					    <div class="card border-0">
+					    <img src="{{url_for('static',filename='image/frequency_bar_plot/plot_netral.png')}}" alt="" width="100%">
+					      <div class="card-body">
+					        <h6 class="card-title border-top">Plot Term Netral</h6>
+					      </div>
+					    </div>
+					  </div>
+					</div>
+					<!-- endplot -->
 				</div>
 			</div>
 			<!-- end of Untuk nampilin wordcloud -->
@@ -172,8 +202,11 @@
 							<!-- Tabel confusion matrix -->
 						<table class="table table-confusion border text-center mx-auto">
 							<thead>
+							<tr>
+								<th class="bg-dark" rowspan="2" colspan="2"></th>
+								<th colspan="3" class="border">Predicted</th>
+							</tr>
 							  <tr>
-								<th scope="col"class="bg-dark"></th>
 								<th scope="col" >Positif</th>
 								<th scope="col" >Netral</th>
 								<th scope="col" >Negatif</th>
@@ -181,6 +214,7 @@
 							</thead>
 							<tbody>
 							  <tr>
+							  	<th rowspan="3" class="align-middle border"> Actual</th>
 								<th>Positif</th>
 								<td>{{confusion[2][2]}}</td>
 								<td>{{confusion[2][1]}}</td>

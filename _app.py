@@ -20,9 +20,6 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'static/folder_csv'
 app.config['DICTIONARY_FOLDER'] = "static/folder_kamus"
 
-global temp_dataframe
-
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -140,14 +137,14 @@ def modelTraining():
     data_frame_processed.dropna(inplace=True)
     jlh_full = countEachSentiment(data_frame_processed) 
 
-    # Lets say this for wordcloud
+    # Lets say this for wordcloud and ploting bar
     df_pos = data_frame_processed.loc[data_frame_processed['label']==1]
     df_neg = data_frame_processed.loc[data_frame_processed['label']==-1]
     df_net = data_frame_processed.loc[data_frame_processed['label']==0]
 
-    countFrequency(df_pos,'cloud_positif')
-    countFrequency(df_neg,'cloud_negatif')
-    countFrequency(df_net,'cloud_netral')
+    countFrequency(df_pos,'positif')
+    countFrequency(df_neg,'negatif')
+    countFrequency(df_net,'netral')
     # end of wordcloud
 
     dataset_X = data_frame_processed['processed_text']
@@ -175,20 +172,26 @@ def modelTraining():
     clasifier.fit(X_latih_tfidf, y_latih)
     # prediksi
     y_pred = clasifier.predict(X_uji_tfidf)
+    # y_pred = clasifier.predict(X_latih_tfidf)
     # end of prediksi
 
     # confusion matrix 
+    # matrix_confusion = metrics.confusion_matrix(y_latih, y_pred)
     matrix_confusion = metrics.confusion_matrix(y_uji, y_pred)
     # accuracy
+    # score_accuracy = metrics.accuracy_score(y_latih, y_pred)
     score_accuracy = metrics.accuracy_score(y_uji, y_pred)
     # precision
+    # score_precision= metrics.precision_score(y_latih, y_pred, average=None, pos_label=1)
     score_precision= metrics.precision_score(y_uji, y_pred, average=None, pos_label=1)
     # recall
+    # score_recall= metrics.recall_score(y_latih, y_pred, average=None, pos_label=1)
     score_recall= metrics.recall_score(y_uji, y_pred, average=None, pos_label=1)
     
     # end of klasifikasi
 
     # menyiapkan dataframe baru untuk menampilkan hasil prediksi dari data uji
+    # data_frame_comparison = pd.DataFrame({'processed_text':X_latih.values,'label':y_latih.values, 'prediction':y_pred})
     data_frame_comparison = pd.DataFrame({'processed_text':X_uji.values,'label':y_uji.values, 'prediction':y_pred})
 
     return render_template('hasil_analisis.html', data = data_frame_comparison, jlh=[jlh_full,sum(jlh_full)],
