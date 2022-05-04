@@ -23,6 +23,7 @@
 		.mereng{
 			margin-left: 0px;
 		}
+
 	}
 	@media (min-width: 768px) and (max-width: 1000px){
 		.table-dataset{
@@ -32,6 +33,7 @@
 		.table-predict { 
 			margin-left: 30px;
 		}
+		
 
 	}
 	@media (min-width: 1000px){
@@ -41,11 +43,16 @@
 		.table-predict { 
 			margin-left: 40px;
 		}
+		.table-confusion{
+			width: 40%;
+			height: 100%;
+		}
 	}
 	.table-predict { table-layout:fixed; width: 90%;}
 
 	.table-confusion{
 			width: 40%;
+			height: 100%;
 		}
 	.wordcloud{
 			margin-left: 0px;
@@ -101,7 +108,7 @@
 						    </tr>
 						    <tr>
 						      <th scope="row">2</th>
-						      <td>Dataset Training (80%)</td>
+						      <td>Dataset Latih (80%)</td>
 						      <td>{{jlh1[0][0]}}</td>
 						      <td>{{jlh1[0][1]}}</td>
 						      <td>{{jlh1[0][2]}}</td>
@@ -109,7 +116,7 @@
 						    </tr>
 						    <tr>
 						      <th scope="row">3</th>
-						      <td>Dataset Testing (20%)</td>
+						      <td>Dataset Uji (20%)</td>
 						      <td>{{jlh2[0][0]}}</td>
 						      <td>{{jlh2[0][1]}}</td>
 						      <td>{{jlh2[0][2]}}</td>
@@ -192,10 +199,10 @@
 			<!-- end of Untuk nampilin wordcloud -->
 
 			<!-- Untuk nampilin confusion matrix -->
-			<div class="row my-3 w-100 mereng border-bottom">
+			<div class="row my-3 w-100 mereng border-bottom pb-4">
 				<div class="container">
 					<div class="row">
-						<p class="h6 my-3 font-weight-bold mx-auto">Pengujian Performa Sistem Terhadap Data Testing</p>
+						<p class="h6 my-3 font-weight-bold mx-auto">Pengujian Performa Sistem Terhadap Data Uji</p>
 					</div>
 					<div class="row">
 						<div class="col-lg-6 col-md-12 col-sm-12  w-100">
@@ -237,7 +244,7 @@
 						  <!-- end of tabel -->
 						</div>
 						<div class="col-lg-6 col-md-12 col-sm-12 w-100 ">
-							<table class="table table-confusion mx-auto border">
+							<table class="table table-confusion mx-auto border mt-lg-0 mt-md-3 mt-sm-3">
 							<thead>
 								<tr class="text-center">
 									<th scope="col" class="bg-dark"></th>
@@ -278,7 +285,7 @@
 				<!-- Untuk nampilin hasil prediksi sistem -->
 				<div class="container">
 					<div class="row ">
-						<p class="h6 mb-3 font-weight-bold mx-auto">Hasil Klasifikasi Data Testing</p>
+						<p class="h6 mb-3 font-weight-bold mx-auto">Hasil Klasifikasi Data Uji</p>
 					</div>
 					<div class="row ">
 						<table class="table fixed border table-predict mx-auto">

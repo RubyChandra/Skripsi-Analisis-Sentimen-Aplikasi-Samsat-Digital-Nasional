@@ -17,7 +17,7 @@ from word_cloud import countFrequency
 
 app = Flask(__name__)
 
-app.config['UPLOAD_FOLDER'] = 'static/folder_csv'
+app.config['UPLOAD_FOLDER'] = 'upload_dir/folder_csv'
 app.config['DICTIONARY_FOLDER'] = "static/folder_kamus"
 
 @app.route('/')
@@ -124,16 +124,16 @@ def uploadReview():
                 data_frame_temp.at[i,'processed_text'] = (data_frame_temp.at[i,'Stemming'])
             del data_frame_temp['Stemming']
             
-            data_frame_temp.to_csv('static/folder_csv/processed.csv',sep=';',index=None)
+            data_frame_temp.to_csv('upload_dir/folder_csv/processed.csv',sep=';',index=None)
 
             return render_template('preprocessing.html',data1 = data_frame_labeled)
 
 
     return render_template('upload_review.html', msg = False)
 
-@app.route('/model_training')
-def modelTraining():
-    data_frame_processed = parseCSV(filePath = "static/folder_csv/processed.csv")
+@app.route('/model_result')
+def modelResult():
+    data_frame_processed = parseCSV(filePath = "upload_dir/folder_csv/processed.csv")
     data_frame_processed.dropna(inplace=True)
     jlh_full = countEachSentiment(data_frame_processed) 
 
@@ -152,7 +152,7 @@ def modelTraining():
     
     # Proses splitting dataset
     X_latih, X_uji, y_latih, y_uji = train_test_split(dataset_X,label_y, test_size=0.2, 
-                                    random_state=42, shuffle=True, stratify=label_y)
+                                    random_state=42, stratify = label_y)
     # Menghitung masing-masing jumlah data (training dan testing)
     df_latih = pd.DataFrame({'processed_text':X_latih.values,'label':y_latih.values})
     jlh_latih = countEachSentiment(df_latih)
@@ -160,7 +160,7 @@ def modelTraining():
     jlh_uji = countEachSentiment(df_uji)
     # End of menghitung
 
-    tfidf_vectorizer = TfidfVectorizer(smooth_idf=True)
+    tfidf_vectorizer = TfidfVectorizer()
     # Pembobotan TF_IDF
     X_latih_tfidf = tfidf_vectorizer.fit_transform(X_latih)
     X_uji_tfidf = tfidf_vectorizer.transform(X_uji)
@@ -168,7 +168,7 @@ def modelTraining():
 
 
     # Model Training  
-    clasifier = MultinomialNB(alpha=0.01)
+    clasifier = MultinomialNB(alpha=0.05)
     clasifier.fit(X_latih_tfidf, y_latih)
     # prediksi
     y_pred = clasifier.predict(X_uji_tfidf)
