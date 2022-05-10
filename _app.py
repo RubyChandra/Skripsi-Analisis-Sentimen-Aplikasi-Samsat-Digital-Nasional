@@ -200,4 +200,4 @@ def modelResult():
     
 if __name__ == '__main__':
     # Jangan lupa di hapus kalau sudah selesai
-    app.run(debug=False, host='0.0.0.0')
+    app.run(debug=True)

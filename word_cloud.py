@@ -13,7 +13,7 @@ def cloudMaker(x, names):
 	wc_mask = np.array(Image.open('static/image/logo_signal_mask.jpg'))
 	freq_term=x.T.sum(axis=1)
 	cloud = WordCloud(scale=2, background_color = "white", width=800, max_words=50,
-					height=400, mask= wc_mask).generate_from_frequencies(freq_term)
+					height=400, mask= wc_mask, colormap='Dark2').generate_from_frequencies(freq_term)
 	cloud.to_file('static/image/wordcloud/cloud_'+names+'.png')
 	freq_term = freq_term.sort_values(axis=0, ascending=False).head(20)
 	# Determine the size of plot bar
